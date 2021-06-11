@@ -1,0 +1,17 @@
+Dans le Home du level02 nous avons un fichier .pcap
+
+On le copie sur notre hôte via scp
+scp -P 4242 level02@172.18.91.125:/home/user/level02/level02.pcap ./level02.pcap
+
+On peut l'analyser avec tcpick (https://serverfault.com/q/38626)
+
+tcpick -yX -r level02.pcap > dump
+
+On voit sur la fin du fichier quelques infos intéréssantes, remises en ligne cela donne:
+login: levelX
+Password: ft_wandr...NDRel.L0L
+
+Les . dans le mot de passe sont le caractère 7f, en ascii c'est le DEL,
+qui indique qu'il faut supprimer le caractère précédent
+
+Si on fait cela ça nous donne en mot de passe ft_waNDReL0L, c'est bien le mot de passe de flag02

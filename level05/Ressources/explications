@@ -1,0 +1,20 @@
+En se connectant sur level05, nous avons le message "You have new mail."
+Les mails dans linux sont dans /var/mail en général,
+dedans il y a un fichier level05, contenant:
+
+*/2 * * * * su -c "sh /usr/sbin/openarenaserver" - flag05
+
+C'est un fichier décrivant une tache cron.
+Cela indique que la commande "sh /usr/sbin/openarenaserver"
+est éxécutée toutes les 2 minutes, avec les droits de flag05
+
+on peut lancer nous-même la commande, mais rien d'utile ne se passe.
+On peut par contre le cat, après une rapide examination
+c'est un script shell qui éxécute avec bash tout les fichiers
+dans le dossier /opt/openarenaserver, puis les supprime.
+
+On peut donc créer un fichier dans /opt/openarenaserver, qui récupèrera le flag pour nous:
+
+echo "getflag > /tmp/flag" > /opt/openarenaserver/script
+
+Après 2 minutes, le fichier /tmp/flag contient le flag

@@ -1,0 +1,29 @@
+Dans le home de level04 il y a un fichier level04.pl
+
+Comme pour le level03 le fichier appartient à flag04, on peut donc l'exploiter
+
+On remarque rapidement la ligne
+
+Le fichier se comporte un peu comme un serveur,
+pour afficher quelque chose dans le print il faut utiliser l'argument x
+
+./level04 x=abc
+
+retourne abc
+
+Essayons avec `getflag`, pour voir si le programme éxécute la commande a notre place
+
+./level04.pl x=\`getflag\`
+
+Nous renvoie bien le retour de getflag, mais avec notre utilisateur et pas flag04
+
+Le commentaire en haut du fichier nous indique que c'est en fait un vrai serveur http,
+qui écoute sur le port 4747
+
+wget -O - localhost:4747
+nous indique que c'est bien le cas,
+il suffit donc de reproduire notre eploit via wget:
+
+./level04.pl x=\`getflag\`
+
+Nous renvoie bien le flag

@@ -1,0 +1,33 @@
+Nous avons 2 fichiers dans le dossier home:
+Un éxécutable level08 et un fichier token
+
+On ne peut pas cat le token, mais on peut éxécuter level08:
+
+./level08
+Retour : ./level08 [file to read]
+
+Essayons ./level08 ./token
+Retour: You may not access './token'
+
+Examinsons l'éxécutable:
+
+gdb --args ./level08 token
+start
+disass
+
+Plein de choses, on peut noter l'appel à strstr (main +102),
+avec en 2eme argument "token" (x/s 0x8048793),
+(le permier argument est argv[1])
+et juste après un jump à <main+149> si le retour de strstr est NULL
+
+J'en déduis donc que si argv[1] contient "token", le programme refuse d'aller plus loin
+
+Essayons de créer un lien symbolique vers token:
+
+ln -s /home/user/level08/token /tmp/lien
+./level08 /tmp/lien
+
+Et nous avons bien le token (quif5eloekouj29ke0vouxean), n'est pas le flag mais le mdp de flag08
+
+su flag08
+getflag

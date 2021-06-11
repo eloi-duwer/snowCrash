@@ -1,0 +1,32 @@
+Un éxécutable est présent dans home.
+Quand on le lance nous avons un message: UID 2013 started us but we we expect 4242
+
+Désassemblons le programme pour voir comment il fonctionne:
+gdb level13
+disass main
+
+On peut voir a main+9 un appel a getuid, puis on compare son retour (dans %eax) à 0x1092,
+qui vaut 4242 en décimal. Si les deux sont égaux il y a un jump a main+63
+On voit ensuite un appel à ft_des avec en paramètre la string "boe]!ai0FB@.:|L6l@A?>qJ}I",
+et son retour est passé a printf avec comme 1er argument "your token is %s"
+
+Le programme décrypte donc la chaine de caractère, puis l'affiche seulement si notre uid vaut 4242
+
+On peut néanmoins modifier le programme au runtime pour éxécuter la branche que l'on souhaite,
+il suffit de modifier les registres au bon moment:
+
+break *0x0804859a
+start
+continue
+
+Nous sommes juste avant la comparaison entre notre uid et 4242
+info registers
+Nous voyons bien que %eax vaut 0x7dd, donc 2013
+
+set $eax=4242
+info registers
+Nous voyons que %eax à bien été modifié
+
+continue
+
+Le programme se termine normalement, et le flag est bien affiché

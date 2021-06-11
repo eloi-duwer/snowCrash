@@ -1,0 +1,19 @@
+Un fichier level11.lua est présent dans home
+
+On peut voir que c'est un serveur qui écoute sur le port 5151
+On peut tester le serveur en réutilisant la commande nc du level10:
+
+nc 127.0.0.1 5151
+
+Le serveur demande un password, qui d'après le fichier est sha1sum
+Mais visiblement cela ne sert pas a grand chose,
+a aucun moment le fait de trouver le bon hash renvoie la clé
+
+On remarque qu'il est possible d'injecter du shell, la fonction hash utilise simplement
+io.popen("echo "..pass.." | sha1sum", "r")
+
+On peut donc mettre dans le mot de passe la commande getflag...
+
+nc 127.0.0.1 5151
+`getflag` > /tmp/flag
+cat /tmp/flag

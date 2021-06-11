@@ -1,0 +1,48 @@
+Rien d'utile de présent dans le home pour une fois, null part ailleurs non plus...
+le seul éxécutable a notre disposition est getflag, peut-être peut-on l'exploiter?
+
+En essayant d'utiliser gdb sur getflag,
+nous remarquons rapidement qu'il est protégé par un appel a ptrace,
+en effet quand nous lançons gdb sur getflag nous avons ceci:
+You should not reverse this
+qui est affiché après l'appel à ptrace
+
+On peut essayer de remplacer l'appel à ptrace grace à LD_PRELOAD,
+comme pour le projet malloc:
+
+long ptrace(int request , int pid , void ∗addr , void ∗data)
+{
+	return (0);
+}
+
+on le compile en librairie dynamique, puis dans gdb
+set environment LD_PRELOAD /tmp/ptrace.so
+
+Mais une autre erreur apparait...
+En fait en faisant la commande string /bin/getflag, on remarque qu'il y a d'autres contrôles
+Pour vérifier que LD_PRELOAD n'est pas utilisé...
+
+Il existe cependant une solution bcp plus simple,
+il suffit de modifier le retour de l'appel à ptrace
+
+gdb getflag
+b *0x0804898e
+run
+info register
+On remarque que %eax est à -1, ce qui indique une erreur lors de l'appel à ptrace
+On peut cependant changer ce retour à 0...
+set $eax=0
+Et nous bypassons toutes les autres protections contre le reverse-engineering!
+
+Nous remarquons ensuite dans le main un appel a getuid,
+puis ce qui s'apparente à un switch sur le résultat de getuid...
+On peut comme pour le level13 changer notre uid, cette fois-ci pour qu'il soit celui du user flag14:
+cat /etc/passwd
+Tout a la fin, l'uid de flag14 est 3014
+
+b *0x08048b02
+c
+set $eax=3014
+c
+
+et le flag est bien affiché

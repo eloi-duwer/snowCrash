@@ -1,0 +1,22 @@
+Le dossier level06 contient 2 fichiers:
+
+Un éxécutable level06 et un fichier level06.php,
+L'éxécutable ne sert qu'a lancer le php avec les droits de flag06
+
+On voit que level06.php utilise preg_replace avec le modifier e, ce qui est une vulnérabilité:
+https://bitquark.co.uk/blog/2013/07/23/the_unexpected_dangers_of_preg_replace
+https://www.php.net/manual/fr/reference.pcre.pattern.modifiers.php#reference.pcre.pattern.modifiers.eval
+
+On peut forcer le fichier a éxécuter la commande getflag,
+il faut en plus de cela utiliser la "syntaxe complexe" de php,
+qui nous permet d'éxécuter du code a l'intérieur d'une chaine de caractères:
+https://www.php.net/manual/en/language.types.string.php#language.types.string.parsing.complex
+
+On peut donc lancer la commande exec(getflag) depuis la chaine de caractères,
+en l'échappant de cette facon: {${exec(getflag)}}
+
+l'exploit est donc au final:
+echo "[x {\${exec(getflag)}}]" > /tmp/exploit
+./level06 /tmp/exploit
+
+et nous avons le flag au milieu d'erreurs php

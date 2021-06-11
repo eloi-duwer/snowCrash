@@ -1,0 +1,37 @@
+Un fichier executable est présent dans le home de level03.
+
+En l'éxécutant, il écrit "Exploit me"
+
+Il faudra probablement détourner ce que fait le programme pour qu'il nous affiche le flag.
+On remarque avec un ls -l que le propriétaire du fichier est flag03.
+On aura donc le flag si on modifie le programme pour qu'il éxécute la commande shell getflag
+
+Nous utilisons gdb pour voir ce qu'il fait
+
+gdb ./level03
+
+Une fois dans gdb nous désassemblons le main:
+disass main
+
+On voit tout a la fin que le programme appelle la fonction "system",
+d'après le man la fonction éxécute la commande shell passée en argument
+
+Pour les éxécutables 32 bits les arguments sont passés via la stack,
+donc le pointeur sur la commande éxécutée par system doit être push sur la stack,
+et c'est le cas, juste avant le call de system nous avons:
+movl   $0x80485e0,(%esp)
+
+La chaîne de caractère est donc a l'adresse 0x80485e0
+
+x/s 0x80485e0
+permet d'afficher :  "/usr/bin/env echo Exploit me"
+
+Il suffit donc de modifier la commande echo dans notre shell pour qu'elle appelle getflag
+
+echo getflag > /tmp/echo
+
+On modifie ensuite notre PATH pour que le echo dans /tmp remplace celui de /bin/echo:
+
+PATH=/tmp/:$PATH
+
+puis on peut éxécuter le programme, qui nous donne bien le flag

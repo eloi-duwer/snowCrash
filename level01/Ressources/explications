@@ -1,0 +1,16 @@
+La méthode du level00 ne marche pas ici, aucun fichier de flag01 n'est accessible
+
+On finit par aller voir le fichier /etc/passwd, qui contient la liste des utilisateurs + d'autres informations
+
+Pour l'utilisateur flag01 nous avons la ligne
+flag01:42hDRfypTqqnw:3001:3001::/home/flag/flag01:/bin/bash
+Le 2eme champ contient le mot de passe de l'utilisateur, hashé.
+
+Comme l'a subtilement indiqué le level00, on peut utiliser John the Reaper pour décrypter ce mot de passe
+
+Sur une machine linux on lance
+sudo apt install john
+qu'on peut ensuite lancer avec le fichier passwd:
+john passwd --show
+
+D'après le retour de john, le mot de passe du compte flag01 est abcdefg

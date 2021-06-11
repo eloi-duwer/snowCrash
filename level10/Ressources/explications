@@ -1,0 +1,30 @@
+2 fichiers dans home:
+
+le token pour flag10
+et un éxécutable level10
+
+l'éxécutable prends en entrée une adresse et un fichier,
+qu'il envoie a l'addresse si nous avons les droits dessus
+
+En utilisant gdb, nous voyons que le main fait appel a access
+pour savoir si nous avons les droits dessus (main+117)
+
+D'après le man (http://manpagesfr.free.fr/man/man2/access.2.html#lbAH)
+c'est une faille de sécurité, car nous pouvons changer le fichier entre le temps
+où access est utilisé et le temps où le fichier est vraiment lu
+
+Il suffit pour cela de créer un lien symbolique vers un fichier valide,
+de lancer la commande, puis de changer le lien symbolique pour qu'il pointe vers le token
+
+Nous allons spammer ces commandes, car le timing est très serré entre l'appel a access
+et la lecture effective du fichier
+En lancant la commande plusieurs centaines de fois par seconde certains appels finiront
+par avoir le comportement recherché
+
+j'ai écrit deux fichiers shell pour cet exploit, un qui envoie le fichier en boucle et qui
+modifie le lien symbolique, et un qui écoute avec nc -l
+respectivement spam.sh et listen.sh
+
+En lancant les 2 scripts via deux connexions différentes a la vm,
+le script listen.sh spam rapidement le token de flag10, woupa2yuojeeaaed06riuj63c
+

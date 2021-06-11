@@ -1,0 +1,21 @@
+A première vue très peu de fichiers sont accessibles depuis cet utilisateur...
+On peut faire la liste des fichiers lisibles avec find, par exemple
+
+find / -readable 2>/dev/null
+
+Malheureusement bcp trop de fichiers sont retournés, on ne peut pas tout examiner
+On peut filtrer cette liste en n'affichant que ceux appartenant à un utilisateur précis:
+
+find / -readable -user flag00 2>/dev/null
+
+Un fichier ressort du lot, /usr/sbin/john
+On peut donc le cat, ce qui affiche cdiiddwpgswtgt
+
+Ce n'est pas le mot de passe pour flag00,
+Le mot de passe est surement encrypté.
+Le mot de passe ne ressemble pas à un hash classique, il est court et n'a aucun chiffre dedans
+C'est quelque chose de bcp plus basique, en l'occurrence un Cesar cypher.
+
+Nous allons sur https://rot13.com/ et voyons que pour ROT11 le mot de passe devient:
+nottoohardhere
+c'est le mot de passe du user flag00

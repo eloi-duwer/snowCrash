@@ -1,0 +1,29 @@
+2 fichiers dans le home: un éxécutable, et un fichier token
+
+On peut voir le token, mais il a l'air encrypté bizarrement:
+
+cat token => f4kmm6p|=pnDBDu{
+
+essayons l'éxécutable:
+
+./level09 token => tpmhr
+
+On se rend vite compte que c'est level09
+qui a l'air d'encrypter la chaine de caractères passée en argument:
+
+./level09 test => tfuw
+./level09 "ceci est un long test 123456" => cfel$jy{(~x+x||v0w5GIKMOQ
+./level09 aaaaaaaaa => abcdefghi
+
+Avec le dernier exemple, l'algorithme d'encryptage a l'air assez simple:
+On rajoute à chaque caractère sa position dans la chaîne: a + 0 = a, puis a + 1 = b...
+
+Il suffit donc de décoder le contenu de token, en faisant l'algorithme inverse,
+Ce que j'ai fait avec le fichier reverse.c
+
+On le copie dans /tmp/reverse.c
+cd /tmp
+gcc ./reverse.c -o ./reverse
+./reverse `cat ~/token`
+
+Et le token est donc f3iji1ju5yuevaus41q1afiuq, c'est le mot de passe pour flag09

